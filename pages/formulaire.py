@@ -124,12 +124,12 @@ def show():
 
     # Bloquer double soumission
     if st.session_state.get("soumis"):
-      st.success("Vos réponses ont déjà été enregistrées.")
-      st.info("Merci pour votre participation !")
-      if st.button("Soumettre une nouvelle réponse / Submit new response"):
-        st.session_state["soumis"] = False
-        st.rerun()
-      return
+        st.success("Vos réponses ont déjà été enregistrées.")
+        st.info("Merci pour votre participation !")
+        if st.button("Soumettre une nouvelle réponse / Submit new response"):
+            st.session_state["soumis"] = False
+            st.rerun()
+        return
 
     # ---- LANGUE ----
     col1, col2 = st.columns([4, 1])
@@ -228,6 +228,20 @@ def show():
             st.error("Veuillez remplir le pays et la devise." if lang == "fr"
                      else "Please fill in the country and currency.")
             return
+
+        # Normaliser les connexions en français
+        connexions_norm = {
+            "Home WiFi": "WiFi domicile",
+            "Campus WiFi": "WiFi campus",
+            "Mobile data": "Data mobile",
+            "Personal internet box": "Box internet personnelle",
+            "Other": "Autre"
+        }
+        connexions = [connexions_norm.get(c, c) for c in connexions]
+
+        # Normaliser les réseaux
+        reseaux_norm = {"Other": "Autre"}
+        reseaux = [reseaux_norm.get(r, r) for r in reseaux]
 
         # Insertion BDD
         id_pays = pays_info[0] if pays_nom_original != "Autre" else get_all_pays()[-1][0]
